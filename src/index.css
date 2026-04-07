@@ -1,0 +1,341 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Outfit:wght@400;700;900&display=swap');
+
+* {
+  box-sizing: border-box;
+}
+
+body, html, #root {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  font-family: 'Outfit', 'Inter', sans-serif;
+  background-color: #000;
+  user-select: none;
+}
+
+/* UI styles will be overlaid on top of canvas */
+.ui-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none; /* Let clicks pass down to canvas */
+  z-index: 10;
+}
+
+.hud-top {
+  position: absolute;
+  top: 20px;
+  left: 30px;
+  right: 30px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.hud-panel {
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  padding: 15px 25px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: white;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+}
+
+.speedometer {
+  position: absolute;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(10px);
+  padding: 20px 40px;
+  border-radius: 40px;
+  border: 2px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5), inset 0 0 20px rgba(255,255,255,0.05);
+}
+
+.speed-value {
+  font-size: 48px;
+  font-weight: 900;
+  line-height: 1;
+  color: #fff;
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+}
+
+.speed-unit {
+  font-size: 14px;
+  font-weight: 600;
+  color: #aaa;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin-top: 5px;
+}
+
+.score-display {
+  display: flex;
+  gap: 30px;
+}
+
+.score-item {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.score-label {
+  font-size: 12px;
+  color: #aaa;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.score-value {
+  font-size: 24px;
+  font-weight: 700;
+  color: #fff;
+}
+
+.game-over-screen {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(10px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  pointer-events: auto;
+}
+
+.game-title {
+  position: absolute;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 24px;
+  font-weight: 900;
+  color: white;
+  text-transform: uppercase;
+  letter-spacing: 4px;
+  text-shadow: 0 0 20px rgba(255,255,255,0.5);
+  background: linear-gradient(180deg, #ffffff 0%, #aaaaaa 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.game-over-title {
+  font-size: 72px;
+  font-weight: 900;
+  color: #ff3333;
+  text-transform: uppercase;
+  text-shadow: 0 0 30px rgba(255, 51, 51, 0.5);
+  margin-bottom: 20px;
+}
+
+.game-over-stats {
+  font-size: 24px;
+  color: white;
+  margin-bottom: 40px;
+  text-align: center;
+  line-height: 1.5;
+}
+
+.restart-btn {
+  padding: 15px 40px;
+  font-family: 'Outfit', sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: #222;
+  background: linear-gradient(to bottom, #ffffff, #cccccc);
+  border: none;
+  border-radius: 30px;
+  cursor: pointer;
+  box-shadow: 0 5px 15px rgba(255,255,255,0.2), inset 0 -3px 0 rgba(0,0,0,0.2);
+  transition: all 0.2s ease;
+  pointer-events: auto;
+}
+
+.restart-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(255,255,255,0.3), inset 0 -3px 0 rgba(0,0,0,0.2);
+}
+
+.restart-btn:active {
+  transform: translateY(2px);
+  box-shadow: 0 2px 5px rgba(255,255,255,0.2), inset 0 -1px 0 rgba(0,0,0,0.2);
+}
+
+.pause-btn {
+  background: rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.2);
+  color: white;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 16px;
+  cursor: pointer;
+  pointer-events: auto;
+  transition: all 0.2s ease;
+}
+
+.pause-btn:hover {
+  background: rgba(255,255,255,0.2);
+  transform: scale(1.05);
+}
+
+.on-screen-controls {
+  position: absolute;
+  bottom: 40px;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  padding: 0 40px;
+  pointer-events: none;
+}
+
+.control-group {
+  display: flex;
+  gap: 20px;
+  pointer-events: auto;
+}
+
+.control-btn {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(5px);
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: 900;
+  font-size: 14px;
+  cursor: pointer;
+  user-select: none;
+  transition: all 0.1s ease;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+}
+
+.control-btn:active {
+  transform: scale(0.9);
+  background: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.6);
+  box-shadow: 0 0 20px rgba(255,255,255,0.4);
+}
+
+.control-btn.acc {
+  background: rgba(46, 204, 113, 0.3);
+  border-color: rgba(46, 204, 113, 0.5);
+}
+.control-btn.acc:active {
+  background: rgba(46, 204, 113, 0.6);
+}
+
+.control-btn.brake {
+  background: rgba(231, 76, 60, 0.3);
+  border-color: rgba(231, 76, 60, 0.5);
+}
+.control-btn.brake:active {
+  background: rgba(231, 76, 60, 0.6);
+}
+
+.control-btn svg {
+  width: 40px;
+  height: 40px;
+  fill: currentColor;
+}
+
+/* Responsiveness for Tablets and Mobile */
+@media (max-width: 900px) {
+  .speedometer {
+    bottom: 15px;
+    padding: 10px 20px;
+    transform: translateX(-50%) scale(0.9);
+  }
+  .speed-value {
+    font-size: 36px;
+  }
+  .on-screen-controls {
+    bottom: 20px;
+    padding: 0 20px;
+  }
+  .control-btn {
+    width: 65px;
+    height: 65px;
+    font-size: 13px;
+  }
+  .game-over-title {
+    font-size: 50px;
+  }
+}
+
+@media (max-width: 600px) {
+  .hud-top {
+    left: 10px;
+    right: 10px;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .score-display {
+    gap: 15px;
+  }
+  .score-value {
+    font-size: 18px;
+  }
+  .hud-panel {
+    padding: 10px 15px;
+  }
+  .speedometer {
+    bottom: 15px;
+    padding: 8px 15px;
+    transform: translateX(-50%) scale(0.8);
+  }
+  .speed-value {
+    font-size: 28px;
+  }
+  .on-screen-controls {
+    bottom: 15px;
+    padding: 0 10px;
+  }
+  .control-group {
+    gap: 10px;
+  }
+  .control-btn {
+    width: 55px;
+    height: 55px;
+    font-size: 11px;
+  }
+  .game-over-title {
+    font-size: 40px;
+  }
+}
+
+/* On Desktop, we might want controls to be less intrusive or just rely on keyboard,
+   but keeping them visible ensures it works if mouse is used or it's a touch screen desktop */
+@media (min-width: 1024px) {
+  .on-screen-controls {
+    max-width: 800px;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+}
