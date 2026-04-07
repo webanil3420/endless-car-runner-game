@@ -110,6 +110,7 @@ function HUD() {
           <div className="game-over-title">CRASHED!</div>
           <div className="game-over-stats">
             Distance: {Math.floor(distance)}m <br />
+            Coins Earned: {coins} <br />
             Final Score: {score}
           </div>
           <button className="restart-btn" onClick={startGame}>PLAY AGAIN</button>
