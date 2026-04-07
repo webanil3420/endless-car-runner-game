@@ -120,11 +120,7 @@ body, html, #root {
 }
 
 .game-title {
-  position: absolute;
-  top: 20px;
-  left: 50%;
-  transform: translateX(-50%);
-  font-size: 24px;
+  font-size: 36px;
   font-weight: 900;
   color: white;
   text-transform: uppercase;
@@ -134,6 +130,9 @@ body, html, #root {
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
+  text-align: center;
+  white-space: nowrap;
+  margin-bottom: 5px;
 }
 
 .game-over-title {
@@ -324,6 +323,10 @@ body, html, #root {
     width: 55px;
     height: 55px;
     font-size: 11px;
+  }
+  .game-title {
+    font-size: 28px;
+    letter-spacing: 2px;
   }
   .game-over-title {
     font-size: 40px;
