@@ -57,6 +57,8 @@ function TrafficCar({ data }) {
   const isPlaying = useGameStore(s => s.gameState === 'playing')
   const { type, lane, zOffset, isPolice, isAmbulance, carColor, baseSpeed } = data
 
+  const targetLaneRef = useRef(data.lane)
+
   useFrame((state, delta) => {
     if (!isPlaying || !bodyRef.current) return
     const { speed, playerPos } = useGameStore.getState()
@@ -67,8 +69,19 @@ function TrafficCar({ data }) {
 
     if (currentZ > DESPAWN_Z || currentZ < SPAWN_Z - 500) {
       currentZ = SPAWN_Z - Math.random() * 200
-      currentX = LANES[Math.floor(Math.random() * LANES.length)]
+      const newLane = LANES[Math.floor(Math.random() * LANES.length)]
+      currentX = newLane
+      targetLaneRef.current = newLane
     }
+    
+    // High chance to switch lanes to create aggressive dynamic traffic (like overtaking)
+    if (Math.random() < 0.003) {
+      const otherLanes = [-5, 0, 5].filter(l => l !== targetLaneRef.current)
+      targetLaneRef.current = otherLanes[Math.floor(Math.random() * otherLanes.length)]
+    }
+
+    // Smoothly animate the lane change
+    currentX = THREE.MathUtils.lerp(currentX, targetLaneRef.current, delta * 3)
 
     bodyRef.current.position.set(currentX, 0.6, currentZ)
 

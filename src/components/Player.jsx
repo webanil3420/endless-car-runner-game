@@ -139,13 +139,13 @@ export function Player() {
 
     let newSpeed = speed
     if (controls.forward) {
-      newSpeed += 60 * delta 
+      newSpeed += 65 * delta 
     } else if (controls.backward) {
-      newSpeed -= 150 * delta 
+      newSpeed -= 200 * delta // Instant braking!
     } else {
-      newSpeed -= 20 * delta 
+      newSpeed -= 90 * delta // Much faster deceleration when ACC is not pressed
     }
-    newSpeed = Math.max(0, Math.min(newSpeed, 220))
+    newSpeed = Math.max(0, Math.min(newSpeed, 180)) // Reduced from 220 to 180 for better control
     useGameStore.setState({ speed: newSpeed })
 
     let targetSteer = 0
@@ -154,9 +154,9 @@ export function Player() {
 
     steerAmountRef.current = THREE.MathUtils.lerp(steerAmountRef.current, targetSteer, 0.1)
     
-    const velocityX = steerAmountRef.current * 30
+    const velocityX = steerAmountRef.current * 35 // Snappier steering
     currentXRef.current += velocityX * delta
-    currentXRef.current = Math.max(-6.5, Math.min(6.5, currentXRef.current))
+    currentXRef.current = Math.max(-7.2, Math.min(7.2, currentXRef.current)) // Expanded from 3.8 to 7.2 to properly reach the road edges
 
     bodyRef.current.position.set(currentXRef.current, 0.6, 0)
     
